@@ -14,7 +14,7 @@ This project is an end-of-year project for implementing strategies in a variant 
 
 1. Clone the repository:
 
-   `[git clone https://github.com/starolis/trust-or-treachery.git](https://github.com/starolis/trust-or-treachery.git)`
+   [git clone https://github.com/starolis/trust-or-treachery.git](https://github.com/starolis/trust-or-treachery.git)
 
 2. Navigate to the src directory and run the tournament:
 
