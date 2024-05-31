@@ -26,14 +26,11 @@ def tit_for_tat(history):
     return "C" if len(history) == 0 else history[-1]
 
 
-def calculate_reputation(my_history, opponent_history):
-    reputation = 0
-    for my_move, opponent_move in zip(my_history, opponent_history):
-        expected_move = tit_for_tat(opponent_history[:-1])
-        if expected_move == "C" and my_move == "D":
-            reputation -= 1
-        elif expected_move == "D" and my_move == "C":
-            reputation += 1
+def update_reputation(reputation, my_move, opponent_move, expected_move):
+    if expected_move == "C" and my_move == "D":
+        reputation -= 1
+    elif expected_move == "D" and my_move == "C":
+        reputation += 1
     return reputation
 
 
@@ -80,12 +77,14 @@ def play_match(strategy1, strategy2, rounds, initial_reputation1, initial_reputa
         score1 += payoff_matrix[outcome][0]
         score2 += payoff_matrix[outcome][1]
 
+        expected_move1 = tit_for_tat(history2)
+        expected_move2 = tit_for_tat(history1)
+        reputation1 = update_reputation(reputation1, move1, move2, expected_move1)
+        reputation2 = update_reputation(reputation2, move2, move1, expected_move2)
+
         history1.append(move1)
         history2.append(move2)
         round_history.append((move1, move2))
-
-        reputation1 += calculate_reputation([move1], history2)
-        reputation2 += calculate_reputation([move2], history1)
 
     # Print match results
     print(f"\nMatch: {strategy1.__name__} vs {strategy2.__name__}")
@@ -127,10 +126,14 @@ def run_tournament(strategies):
                     strategy1, strategy2, rounds, reputation1, reputation2
                 )
                 results[strategy1.__name__]["score"] += score1
-                results[strategy1.__name__]["reputation"] += new_reputation1
+                results[strategy1.__name__]["reputation"] += (
+                    new_reputation1 - reputation1
+                )
                 results[strategy1.__name__]["games"] += 1
                 results[strategy2.__name__]["score"] += score2
-                results[strategy2.__name__]["reputation"] += new_reputation2
+                results[strategy2.__name__]["reputation"] += (
+                    new_reputation2 - reputation2
+                )
                 results[strategy2.__name__]["games"] += 1
 
     return results
