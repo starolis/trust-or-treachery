@@ -75,6 +75,50 @@ def sliding_window(
     return "C" if coop_count > defect_count else "D"
 
 
+def sliding_five(
+    my_history, opponent_history, round_number, relative_score, opponent_reputation
+):
+    if len(opponent_history) < 5:
+        return "C"
+    window = opponent_history[-5:]
+    coop_count = window.count("C")
+    defect_count = window.count("D")
+    return "C" if coop_count > defect_count else "D"
+
+
+def sliding_six(
+    my_history, opponent_history, round_number, relative_score, opponent_reputation
+):
+    if len(opponent_history) < 6:
+        return "C"
+    window = opponent_history[-6:]
+    coop_count = window.count("C")
+    defect_count = window.count("D")
+    return "C" if coop_count > defect_count else "D"
+
+
+def sliding_seven(
+    my_history, opponent_history, round_number, relative_score, opponent_reputation
+):
+    if len(opponent_history) < 7:
+        return "C"
+    window = opponent_history[-7:]
+    coop_count = window.count("C")
+    defect_count = window.count("D")
+    return "C" if coop_count > defect_count else "D"
+
+
+def sliding_eight(
+    my_history, opponent_history, round_number, relative_score, opponent_reputation
+):
+    if len(opponent_history) < 8:
+        return "C"
+    window = opponent_history[-8:]
+    coop_count = window.count("C")
+    defect_count = window.count("D")
+    return "C" if coop_count > defect_count else "D"
+
+
 def sliding_nuke(
     my_history, opponent_history, round_number, relative_score, opponent_reputation
 ):
@@ -149,6 +193,10 @@ strategies = [
     nuclear_option,
     pattern_exploit,
     sliding_window,
+    sliding_five,
+    sliding_six,
+    sliding_seven,
+    sliding_eight,
     sliding_nuke,
     grudger,
     random_strategy,
