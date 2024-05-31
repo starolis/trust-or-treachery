@@ -64,5 +64,5 @@ def sliding_window(history1, history2, round_number, relative_score, reputation)
 
 strategies = [
     always_cooperate, always_defect, tit_for_tat, score_based, reputation_based,
-    nuclear_option, pattern_exploit, sliding_window, wrath
+    nuclear_option, pattern_exploit, sliding_window
 ]
