@@ -11,21 +11,19 @@ advanced_payoff_matrix = {"CC": (4, 4), "CD": (0, 10), "DC": (10, 0), "DD": (1, 
 
 
 def get_payoff_matrix(mutual_cooperations):
-    if mutual_cooperations >= 100:
-        return advanced_payoff_matrix
-    return initial_payoff_matrix
+    return (
+        advanced_payoff_matrix if mutual_cooperations >= 100 else initial_payoff_matrix
+    )
 
 
-def add_noise(action: str, noise_level: float = 0.02) -> str:
+def add_noise(action, noise_level=0.02):
     if random.random() < noise_level:
         return "D" if action == "C" else "C"
     return action
 
 
 def tit_for_tat(history):
-    if len(history) == 0:
-        return "C"
-    return history[-1]
+    return "C" if len(history) == 0 else history[-1]
 
 
 def calculate_reputation(my_history, opponent_history):
@@ -129,10 +127,10 @@ def run_tournament(strategies):
                     strategy1, strategy2, rounds, reputation1, reputation2
                 )
                 results[strategy1.__name__]["score"] += score1
-                results[strategy1.__name__]["reputation"] = new_reputation1
+                results[strategy1.__name__]["reputation"] += new_reputation1
                 results[strategy1.__name__]["games"] += 1
                 results[strategy2.__name__]["score"] += score2
-                results[strategy2.__name__]["reputation"] = new_reputation2
+                results[strategy2.__name__]["reputation"] += new_reputation2
                 results[strategy2.__name__]["games"] += 1
 
     return results

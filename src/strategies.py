@@ -2,85 +2,64 @@ import random
 
 
 # Example Strategies
-def always_cooperate(
-    my_history, opponent_history, round_number, relative_score, opponent_reputation
-):
+def always_cooperate(my_hist, opp_hist, round_num, rel_score, opp_rep):
     return "C"
 
 
-def always_defect(
-    my_history, opponent_history, round_number, relative_score, opponent_reputation
-):
+def always_defect(my_hist, opp_hist, round_num, rel_score, opp_rep):
     return "D"
 
 
-def tit_for_tat(
-    my_history, opponent_history, round_number, relative_score, opponent_reputation
-):
-    if round_number == 1:
+def tit_for_tat(my_hist, opp_hist, round_num, rel_score, opp_rep):
+    if round_num == 1:
         return "C"
-    else:
-        return opponent_history[-1]
+    return opp_hist[-1]
 
 
-def score_based(
-    my_history, opponent_history, round_number, relative_score, opponent_reputation
-):
-    if round_number == 1:
+def score_based(my_hist, opp_hist, round_num, rel_score, opp_rep):
+    if round_num == 1:
         return "C"
-    if relative_score > 0:
-        return "C"
-    return "D"
+    return "C" if rel_score > 0 else "D"
 
 
-def reputation_based(
-    my_history, opponent_history, round_number, relative_score, opponent_reputation
-):
-    if round_number == 1:
+def reputation_based(my_hist, opp_hist, round_num, rel_score, opp_rep):
+    if round_num == 1:
         return "C"
-    if opponent_reputation < -10:
+    if opp_rep < -10:
         return "N"
-    if relative_score > 0:
-        return "C"
-    return "D"
+    return "C" if rel_score > 0 else "D"
 
 
-def nuclear_option(
-    my_history, opponent_history, round_number, relative_score, opponent_reputation
-):
-    if round_number == 1:
+def nuclear_option(my_hist, opp_hist, round_num, rel_score, opp_rep):
+    if round_num == 1:
         return "C"
-    if opponent_history[-3:] == ["D", "D", "D"]:
+    if opp_hist[-3:] == ["D", "D", "D"]:
         return "N"
-    return "C" if relative_score > 0 else "D"
+    return "C" if rel_score > 0 else "D"
 
 
 # Additional Strategies
-def pattern_exploit(history1, history2, round_number, relative_score, reputation):
-    if len(history2) < 3:
+def pattern_exploit(my_hist, opp_hist, round_num, rel_score, opp_rep):
+    if len(opp_hist) < 3:
         return "C"
-    # Look for patterns in the last three moves of the opponent
-    pattern = "".join(history2[-3:])
+    pattern = "".join(opp_hist[-3:])
     if pattern == "CCC":
         return "D"
-    elif pattern == "DDD":
+    if pattern == "DDD":
         return "C"
-    else:
-        return "C" if random.random() < 0.5 else "D"
+    return "C" if random.random() < 0.5 else "D"
 
 
-def sliding_window(history1, history2, round_number, relative_score, reputation):
-    if len(history2) < 4:
+def sliding_window(my_hist, opp_hist, round_num, rel_score, opp_rep):
+    if len(opp_hist) < 4:
         return "C"
-    window = history2[-4:]
+    window = opp_hist[-4:]
     coop_count = window.count("C")
     defect_count = window.count("D")
-    if coop_count > defect_count:
-        return "C"
-    else:
-        return "D"
+    return "C" if coop_count > defect_count else "D"
 
 
+# List of strategies
 strategies = [
     always_cooperate,
     always_defect,
