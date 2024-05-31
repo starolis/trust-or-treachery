@@ -1,6 +1,8 @@
 import random
-from strategies import strategies
+from statistics import mean
+import numpy as np
 from colorama import init, Fore, Style
+from strategies import strategies
 
 
 # Initialize colorama
@@ -46,19 +48,18 @@ def play_match(strategy1, strategy2, rounds, initial_reputation1, initial_reputa
 
         move1 = strategy1(history1, history2, round_number, relative_score1, reputation2)
         move2 = strategy2(history2, history1, round_number, relative_score2, reputation1)
+        move1 = strategy1(history1, history2, round_number, relative_score1, reputation2)
+        move2 = strategy2(history2, history1, round_number, relative_score2, reputation1)
 
         if move1 == "N" and move2 == "N":
-            print(f"Early termination due to nuclear option: {move1}, {move2}")
             break
         elif move1 == "N":
             reputation1 += 5
             reputation2 -= 5
-            print(f"Strategy1 chose nuclear option: {move1}")
             break
         elif move2 == "N":
             reputation2 += 5
             reputation1 -= 5
-            print(f"Strategy2 chose nuclear option: {move2}")
             break
 
         move1, noisy1 = add_noise(move1, noise_level)
@@ -117,6 +118,7 @@ def run_tournament(strategies):
                 reputation2 = results[strategy2.__name__]["reputation"]
                 score1, score2, new_reputation1, new_reputation2 = play_match(strategy1, strategy2, rounds, reputation1, reputation2)
                 results[strategy1.__name__]["score"] += score1
+                results[strategy1.__name__]["reputation"] += new_reputation1 - reputation1
                 results[strategy1.__name__]["reputation"] += new_reputation1 - reputation1
                 results[strategy1.__name__]["games"] += 1
                 results[strategy2.__name__]["score"] += score2
