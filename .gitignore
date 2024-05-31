@@ -51,3 +51,6 @@ coverage.xml
 
 # Ignore personal settings
 *.env
+
+strategies.py
+gpt.py

@@ -60,6 +60,16 @@ def sliding_window(history1, history2, round_number, relative_score, reputation)
     else:
         return 'D'
 
+def wrath(my_history, opponent_history, round_number, relative_score, opponent_reputation):
+    if round_number == 1:
+        return 'C'
+    elif opponent_history.count('D') >= 2:
+        return 'D'
+    else:
+        return opponent_history[-1]
+
+
 strategies = [
-    always_cooperate, always_defect, tit_for_tat, score_based, reputation_based, nuclear_option, pattern_exploit, sliding_window
+    always_cooperate, always_defect, tit_for_tat, score_based, reputation_based,
+    nuclear_option, pattern_exploit, sliding_window, wrath
 ]
