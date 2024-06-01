@@ -2,7 +2,7 @@ import random
 from statistics import mean
 import numpy as np
 from colorama import init, Fore, Style
-from strategies import strategies
+from strategies2 import strategies
 
 
 # Initialize colorama
