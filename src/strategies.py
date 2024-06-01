@@ -119,6 +119,17 @@ def sliding_eight(
     return "C" if coop_count > defect_count else "D"
 
 
+def sliding_nine(
+    my_history, opponent_history, round_number, relative_score, opponent_reputation
+):
+    if len(opponent_history) < 9:
+        return "C"
+    window = opponent_history[-9:]
+    coop_count = window.count("C")
+    defect_count = window.count("D")
+    return "C" if coop_count > defect_count else "D"
+
+
 def sliding_nuke(
     my_history, opponent_history, round_number, relative_score, opponent_reputation
 ):
@@ -183,6 +194,56 @@ def adaptive(
     return "C"
 
 
+def probing_defector(
+    my_history, opponent_history, round_number, relative_score, opponent_reputation
+):
+    if round_number <= 2:
+        return "C"
+    if round_number % 3 == 0:
+        return "D"
+    return "C"
+
+
+def calculated_reciprocity(
+    my_history, opponent_history, round_number, relative_score, opponent_reputation
+):
+    if round_number == 1:
+        return "C"
+    defect_rate = opponent_history.count("D") / len(opponent_history)
+    if defect_rate > 0.5:
+        return "D"
+    return "C"
+
+
+def fair_weather_friend(
+    my_history, opponent_history, round_number, relative_score, opponent_reputation
+):
+    if relative_score > 0:
+        return "C"
+    return "D"
+
+
+def punisher(
+    my_history, opponent_history, round_number, relative_score, opponent_reputation
+):
+    if round_number == 1:
+        return "C"
+    if opponent_history[-1] == "D":
+        return "D"
+    if "D" in opponent_history[-3:]:
+        return "D"
+    return "C"
+
+
+def mimic_after_two_defects(
+    my_history, opponent_history, round_number, relative_score, opponent_reputation
+):
+    if round_number == 1:
+        return "C"
+    if "DD" in "".join(opponent_history):
+        return opponent_history[-1]
+    return "C"
+
 # List of strategies
 strategies = [
     always_cooperate,
@@ -193,14 +254,20 @@ strategies = [
     nuclear_option,
     pattern_exploit,
     sliding_window,
-    sliding_five,
-    sliding_six,
-    sliding_seven,
+    #    sliding_five,
+    #    sliding_six,
+    #    sliding_seven,
     sliding_eight,
-    sliding_nuke,
+    #    sliding_nine,
+    #    sliding_nuke,
     grudger,
     random_strategy,
     pavlov,
     forgiving_tit_for_tat,
     adaptive,
+    probing_defector,
+    calculated_reciprocity,
+    fair_weather_friend,
+    punisher,
+    mimic_after_two_defects
 ]
