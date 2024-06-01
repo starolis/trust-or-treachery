@@ -276,6 +276,7 @@ def sliding_eight(
     defect_count = window.count("D")
     return "C" if coop_count > defect_count else "D"
 
+
 def sliding_fifteen(
     my_history, opponent_history, round_number, relative_score, opponent_reputation
 ):
@@ -297,6 +298,7 @@ def sliding_sixteen(
     defect_count = window.count("D")
     return "C" if coop_count > defect_count else "D"
 
+
 def exploiter_of_magic(
     my_history, opponent_history, round_number, relative_score, opponent_reputation
 ):
@@ -305,6 +307,27 @@ def exploiter_of_magic(
     if cycle_position in [0, 1, 2, 3, 4]:
         return "C"
     return "D"
+
+
+def selective_memory(
+    my_history, opponent_history, round_number, relative_score, opponent_reputation
+):
+    window_size = 8
+    if round_number <= window_size:
+        return "C"  # Start with cooperation in the initial rounds
+
+    # Create weights for the last 10 moves, most recent move gets the highest weight
+    weights = list(range(1, window_size + 1))
+
+    # Extract the last 10 moves from opponent history
+    recent_moves = opponent_history[-window_size:]
+
+    # Calculate weighted counts of cooperation and defection
+    weighted_coop = sum(w for move, w in zip(recent_moves, weights) if move == "C")
+    weighted_defect = sum(w for move, w in zip(recent_moves, weights) if move == "D")
+
+    # Decide the next move based on the weighted counts
+    return "C" if weighted_coop > weighted_defect else "D"
 
 
 # List of strategies
@@ -338,4 +361,5 @@ strategies = [
     sliding_fifteen,
     sliding_sixteen,
     exploiter_of_magic,
+    selective_memory,
 ]
