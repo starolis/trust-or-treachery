@@ -330,6 +330,44 @@ def selective_memory(
     return "C" if weighted_coop > weighted_defect else "D"
 
 
+def double_whammy(
+    my_history, opponent_history, round_number, relative_score, opponent_reputation
+):
+    if round_number == 1:
+        return "C"  # Always cooperate on the first round
+
+    # Check if in the defecting period after opponent's defect
+    if round_number > 1:
+        last_opponent_move = opponent_history[-1]
+
+        if round_number == 2:
+            if last_opponent_move == "D":
+                return "D"
+            else:
+                return "C"
+
+        if last_opponent_move == "D":
+            if len(opponent_history) >= 2 and opponent_history[-2] == "D":
+                return "D"
+            else:
+                return "D"
+        else:
+            if opponent_history[-2] == "D":
+                return "D"
+            else:
+                return "C"
+
+
+def exotic_potato(
+    my_history, opponent_history, round_number, relative_score, opponent_reputation
+):
+    if round_number == 1:
+        return "C"
+    if opponent_history[-1] == "C":
+        return "C"
+    return "D" if random.random() < 0.98 else "C"
+
+
 # List of strategies
 strategies = [
     unconditional_cooperator,
@@ -362,4 +400,6 @@ strategies = [
     sliding_sixteen,
     exploiter_of_magic,
     selective_memory,
+    double_whammy,
+    exotic_potato,
 ]
