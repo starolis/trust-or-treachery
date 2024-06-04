@@ -126,3 +126,48 @@ def wrath(
         return "D"
     else:
         return opponent_history[-1]
+
+
+def james_strat(
+    history, opponent_history, round_number, relative_score, opponent_reputation
+):
+    rounds_remaining = 195 - round_number
+    predefined_moves = ["C", "D", "C", "C", "D", "D", "C", "D", "C", "D"]
+
+    if round_number <= 10:
+        return predefined_moves[round_number - 1]
+
+    opponent_cooperates = opponent_history.count("C")
+    opponent_defects = opponent_history.count("D")
+    total_moves = len(opponent_history)
+
+    always_betray = opponent_defects == total_moves
+    always_cooperate = opponent_cooperates == total_moves
+
+    if opponent_history[-1] == "D":
+        likely_tit_for_tat = opponent_history[-2:] == ["C", "D"]
+    else:
+        likely_tit_for_tat = False
+
+    if always_cooperate:
+        return "D" if rounds_remaining <= 5 else "C"
+    elif always_betray:
+        return "D"
+    elif likely_tit_for_tat:
+        return "C" if opponent_history[-1] == "C" else "D"
+    else:
+        return "C" if opponent_history[-1] == "C" else "D"
+
+
+strategies = [
+    always_cooperate,
+    always_defect,
+    tit_for_tat,
+    double_whammy,
+    exotic_potato,
+    tombuck_tim,
+    majic_eight_ball,
+    adaptive_randomization,
+    wrath,
+    james_strat,
+]

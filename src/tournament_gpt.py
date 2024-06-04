@@ -1,13 +1,21 @@
 import random
 import time
 import openai
+import os
 from statistics import mean
 import numpy as np
 from colorama import init, Fore, Style
 from strategies2 import strategies
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Initialize colorama
 init(autoreset=True)
+
+# Get the OpenAI API key from the environment
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # Define the initial and advanced payoff matrices
 initial_payoff_matrix = {"CC": (3, 3), "CD": (0, 5), "DC": (5, 0), "DD": (1, 1)}
@@ -32,6 +40,17 @@ def update_reputation(reputation, my_move, opponent_move, expected_move):
     elif expected_move == "D" and my_move == "C":
         reputation += 1
     return reputation
+
+def get_gpt_commentary(prompt, max_tokens=250):
+    response = openai.ChatCompletion.create(
+        model="gpt-4o",
+        messages=[
+            {"role": "system", "content": "You are a witty and humorous commentator providing in-depth analysis of a tournament."},
+            {"role": "user", "content": prompt},
+        ],
+        max_tokens=max_tokens,
+    )
+    return response.choices[0].message.content.strip()
 
 def play_match(strategy1, strategy2, rounds, initial_reputation1, initial_reputation2, delay=0.1):
     history1, history2 = [], []
@@ -104,6 +123,20 @@ def play_match(strategy1, strategy2, rounds, initial_reputation1, initial_reputa
         print(line2)
         print()
 
+    # Prepare concise prompt for post-match commentary
+    final_prompt = (
+        f"Final match analysis for {strategy1.__name__} vs {strategy2.__name__}:\n"
+        f"Scores: {strategy1.__name__}: {score1}, {strategy2.__name__}: {score2}\n"
+        f"Reputations: {strategy1.__name__}: {reputation1}, {strategy2.__name__}: {reputation2}\n"
+        f"Match history (each pair of characters represents one round, X indicates noise):\n"
+        f"Player 1 History: {' '.join(history1)}\n"
+        f"Player 2 History: {' '.join(history2)}\n"
+        f"Provide a short and concise analysis of the match, look for key turning points, and interpret the noise (X) as interference. "
+        f"Personify the strategies as athletes, and give an entertaining assessment of their performance."
+    )
+    final_commentary = get_gpt_commentary(final_prompt, max_tokens=150)
+    print(f"\nGPT Final Commentary:\n{final_commentary}\n")
+
     return score1, score2, reputation1, reputation2
 
 def run_tournament(strategies):
@@ -132,6 +165,16 @@ def run_tournament(strategies):
 
 # Run the tournament
 results = run_tournament(strategies)
+
+# Get final tournament commentary
+final_prompt = (
+    f"Final tournament analysis:\n"
+    f"Results:\n"
+    f"{results}\n"
+    f"Provide a humorous and in-depth analysis of the tournament, personify the strategies, and give an assessment of their performances. Keep the response concise and within the token limit."
+)
+final_commentary = get_gpt_commentary(final_prompt, max_tokens=500)
+print(f"\nGPT Final Tournament Commentary:\n{final_commentary}\n")
 
 # Sort the results by score in descending order
 sorted_results = sorted(results.items(), key=lambda item: item[1]["score"], reverse=True)

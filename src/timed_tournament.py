@@ -1,6 +1,5 @@
 import random
 import time
-import openai
 from statistics import mean
 import numpy as np
 from colorama import init, Fore, Style
@@ -42,6 +41,8 @@ def play_match(strategy1, strategy2, rounds, initial_reputation1, initial_reputa
     round_history = []
     noise_flags = []
 
+    display_lines = []
+
     for round_number in range(1, rounds + 1):
         payoff_matrix = get_payoff_matrix(mutual_cooperations)
         relative_score1 = score1 - score2
@@ -80,29 +81,36 @@ def play_match(strategy1, strategy2, rounds, initial_reputation1, initial_reputa
         round_history.append((move1, move2))
         noise_flags.append((noisy1, noisy2))
 
-    # Print match results
-    print(f"\nMatch: {strategy1.__name__} vs {strategy2.__name__}")
-    print(f"Rounds Played: {len(round_history)}")
-    print(f"Final Score: {strategy1.__name__} = {score1}, {strategy2.__name__} = {score2}")
-    print(f"Final Reputation: {strategy1.__name__} = {reputation1}, {strategy2.__name__} = {reputation2}")
-
-    # Format and print round history
-    for i in range(0, len(round_history), 50):
+        # Prepare display lines for this round
         line1 = ""
         line2 = ""
         for j in range(50):
-            if i + j < len(round_history):
-                move1, move2 = round_history[i + j]
-                noisy1, noisy2 = noise_flags[i + j]
+            if j < len(round_history):
+                move1, move2 = round_history[j]
+                noisy1, noisy2 = noise_flags[j]
                 colored_move1 = Fore.GREEN + move1 if move1 == "C" else Fore.RED + move1
                 colored_move2 = Fore.GREEN + move2 if move2 == "C" else Fore.RED + move2
                 separator1 = " " if not noisy1 else Fore.WHITE + "X"
                 separator2 = " " if not noisy2 else Fore.WHITE + "X"
                 line1 += f"{colored_move1}{separator1}"
                 line2 += f"{colored_move2}{separator2}"
-        print(line1)
-        print(line2)
-        print()
+            else:
+                line1 += " "
+                line2 += " "
+        display_lines.append(line1)
+        display_lines.append(line2)
+        display_lines.append("")
+
+    # Print match results
+    print(f"\nMatch: {strategy1.__name__} vs {strategy2.__name__}")
+    print(f"Rounds Played: {len(round_history)}")
+    print(f"Final Score: {strategy1.__name__} = {score1}, {strategy2.__name__} = {score2}")
+    print(f"Final Reputation: {strategy1.__name__} = {reputation1}, {strategy2.__name__} = {reputation2}")
+
+    # Display round history with delay
+    for line in display_lines:
+        print(line)
+        time.sleep(delay)
 
     return score1, score2, reputation1, reputation2
 

@@ -400,8 +400,40 @@ def tombuck_tim(my_history, opponent_history, round_number, relative_score, oppo
     return "D" if random.random() < 0.9 else "C"
 
 
+def james_strat(
+    history, opponent_history, round_number, relative_score, opponent_reputation
+):
+    rounds_remaining = 195 - round_number
+    predefined_moves = ["C", "D", "C", "C", "D", "D", "C", "D", "C", "D"]
+
+    if round_number <= 10:
+        return predefined_moves[round_number - 1]
+
+    opponent_cooperates = opponent_history.count("C")
+    opponent_defects = opponent_history.count("D")
+    total_moves = len(opponent_history)
+
+    always_betray = opponent_defects == total_moves
+    always_cooperate = opponent_cooperates == total_moves
+
+    if opponent_history[-1] == "D":
+        likely_tit_for_tat = opponent_history[-2:] == ["C", "D"]
+    else:
+        likely_tit_for_tat = False
+
+    if always_cooperate:
+        return "D" if rounds_remaining <= 5 else "C"
+    elif always_betray:
+        return "D"
+    elif likely_tit_for_tat:
+        return "C" if opponent_history[-1] == "C" else "D"
+    else:
+        return "C" if opponent_history[-1] == "C" else "D"
+
 # List of strategies
 strategies = [
+    sliding_sixteen,
+    james_strat,
     unconditional_cooperator,
     unconditional_defector,
     random_strategy,
@@ -430,7 +462,7 @@ strategies = [
     sliding_eight,
     sliding_nine,
     sliding_fifteen,
-    sliding_sixteen,
+ 
     sliding_thirty_two,
     exploiter_of_magic,
     selective_memory,
