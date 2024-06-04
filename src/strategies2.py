@@ -277,6 +277,16 @@ def sliding_eight(
     return "C" if coop_count > defect_count else "D"
 
 
+def sliding_nine(
+    my_history, opponent_history, round_number, relative_score, opponent_reputation
+):
+    if len(opponent_history) < 9:
+        return "C"
+    window = opponent_history[-9:]
+    coop_count = window.count("C")
+    defect_count = window.count("D")
+    return "C" if coop_count > defect_count else "D"
+
 def sliding_fifteen(
     my_history, opponent_history, round_number, relative_score, opponent_reputation
 ):
@@ -294,6 +304,17 @@ def sliding_sixteen(
     if len(opponent_history) < 16:
         return "C"
     window = opponent_history[-16:]
+    coop_count = window.count("C")
+    defect_count = window.count("D")
+    return "C" if coop_count > defect_count else "D"
+
+
+def sliding_thirty_two(
+    my_history, opponent_history, round_number, relative_score, opponent_reputation
+):
+    if len(opponent_history) < 32:
+        return "C"
+    window = opponent_history[-32:]
     coop_count = window.count("C")
     defect_count = window.count("D")
     return "C" if coop_count > defect_count else "D"
@@ -368,6 +389,17 @@ def exotic_potato(
     return "D" if random.random() < 0.98 else "C"
 
 
+def tombuck_tim(my_history, opponent_history, round_number, relative_score, opponent_reputation):
+    # Always defect on the first round
+    if round_number == 1:
+        return "D"
+    # Cooperate if the opponent cooperated in the last round
+    elif opponent_history[-1] == "C":
+        return "C"
+    # Otherwise, defect with a 90% chance, cooperate 10% of the time
+    return "D" if random.random() < 0.9 else "C"
+
+
 # List of strategies
 strategies = [
     unconditional_cooperator,
@@ -396,10 +428,13 @@ strategies = [
     good_strategy,
     sliding_three,
     sliding_eight,
+    sliding_nine,
     sliding_fifteen,
     sliding_sixteen,
+    sliding_thirty_two,
     exploiter_of_magic,
     selective_memory,
     double_whammy,
     exotic_potato,
+    tombuck_tim,
 ]
