@@ -1,6 +1,26 @@
 import random
 
 
+def always_cooperate(
+    my_history, opponent_history, round_number, relative_score, opponent_reputation
+):
+    return "C"
+
+
+def always_defect(
+    my_history, opponent_history, round_number, relative_score, opponent_reputation
+):
+    return "D"
+
+
+def tit_for_tat(
+    my_history, opponent_history, round_number, relative_score, opponent_reputation
+):
+    if round_number == 1:
+        return "C"
+    return opponent_history[-1]
+
+
 def double_whammy(
     my_history, opponent_history, round_number, relative_score, opponent_reputation
 ):
@@ -39,7 +59,9 @@ def exotic_potato(
     return "D" if random.random() < 0.98 else "C"
 
 
-def tombuck_tim(my_history, opponent_history, round_number, relative_score, opponent_reputation):
+def tombuck_tim(
+    my_history, opponent_history, round_number, relative_score, opponent_reputation
+):
     # Always defect on the first round
     if round_number == 1:
         return "D"
@@ -50,7 +72,7 @@ def tombuck_tim(my_history, opponent_history, round_number, relative_score, oppo
     return "D" if random.random() < 0.9 else "C"
 
 
-def sliding_eight(
+def majic_eight_ball(
     my_history, opponent_history, round_number, relative_score, opponent_reputation
 ):
     if len(opponent_history) < 8:
@@ -61,33 +83,46 @@ def sliding_eight(
     return "C" if coop_count > defect_count else "D"
 
 
-def adaptive_randomization(my_history, opponent_history, round_number, relative_score, opponent_reputation):
+def adaptive_randomization(
+    my_history, opponent_history, round_number, relative_score, opponent_reputation
+):
     # Initialize the first move to cooperation
     if round_number == 1:
-        return 'C'
+        return "C"
         # Randomly decide to add some noise to the strategy
     noise_threshold = 0.1  # 10% chance to randomize the move
     if random.random() < noise_threshold:
-        return random.choice(['C', 'D'])
-    
+        return random.choice(["C", "D"])
+
     # Analyze the opponent's last three moves
     recent_opponent_moves = opponent_history[-3:]
-    
+
     # Determine the opponent's tendency based on their last three moves
-    opponent_cooperation_rate = recent_opponent_moves.count('C') / 3
-    
+    opponent_cooperation_rate = recent_opponent_moves.count("C") / 3
+
     # If the opponent has cooperated at least twice in the last three moves, cooperate
-    if opponent_cooperation_rate >= 2/3:
-        return 'C'
-    
+    if opponent_cooperation_rate >= 2 / 3:
+        return "C"
+
     # If the opponent has defected at least twice in the last three moves, defect
-    if opponent_cooperation_rate <= 1/3:
-        return 'D'
-    
+    if opponent_cooperation_rate <= 1 / 3:
+        return "D"
+
     # In other cases, use a mixed strategy based on the relative score
     # If we are ahead in score, tend to cooperate more
     if relative_score > 0:
-        return 'C' if random.random() < 0.7 else 'D'
+        return "C" if random.random() < 0.7 else "D"
     # If we are behind in score, tend to defect more
     else:
-        return 'D' if random.random() < 0.7 else 'C'
+        return "D" if random.random() < 0.7 else "C"
+
+
+def wrath(
+    my_history, opponent_history, round_number, relative_score, opponent_reputation
+):
+    if round_number == 1:
+        return "C"
+    elif opponent_history.count("D") >= 2:
+        return "D"
+    else:
+        return opponent_history[-1]
