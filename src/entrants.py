@@ -20,7 +20,7 @@ def tit_for_tat(
         return "C"
     return opponent_history[-1]
 
-
+# Charlie
 def double_whammy(
     my_history, opponent_history, round_number, relative_score, opponent_reputation
 ):
@@ -48,7 +48,7 @@ def double_whammy(
             else:
                 return "C"
 
-
+# Taylor
 def exotic_potato(
     my_history, opponent_history, round_number, relative_score, opponent_reputation
 ):
@@ -58,7 +58,7 @@ def exotic_potato(
         return "C"
     return "D" if random.random() < 0.98 else "C"
 
-
+# Peter
 def tombuck_tim(
     my_history, opponent_history, round_number, relative_score, opponent_reputation
 ):
@@ -71,7 +71,7 @@ def tombuck_tim(
     # Otherwise, defect with a 90% chance, cooperate 10% of the time
     return "D" if random.random() < 0.9 else "C"
 
-
+# Matt
 def majic_eight_ball(
     my_history, opponent_history, round_number, relative_score, opponent_reputation
 ):
@@ -82,7 +82,7 @@ def majic_eight_ball(
     defect_count = window.count("D")
     return "C" if coop_count > defect_count else "D"
 
-
+# Damon
 def adaptive_randomization(
     my_history, opponent_history, round_number, relative_score, opponent_reputation
 ):
@@ -116,7 +116,7 @@ def adaptive_randomization(
     else:
         return "D" if random.random() < 0.7 else "C"
 
-
+# Ethan
 def wrath(
     my_history, opponent_history, round_number, relative_score, opponent_reputation
 ):
@@ -127,7 +127,7 @@ def wrath(
     else:
         return opponent_history[-1]
 
-
+# James
 def james_strat(
     history, opponent_history, round_number, relative_score, opponent_reputation
 ):
@@ -158,6 +158,33 @@ def james_strat(
     else:
         return "C" if opponent_history[-1] == "C" else "D"
 
+# Yilin
+def salty_tit_for_tat(
+    my_history, opponent_history, round_number, relative_score, opponent_reputation
+):
+    # First move is cooperate
+    if round_number == 1:
+        return "C"
+
+    # Handle the three-move sequence
+    if len(my_history) >= 3:
+        if my_history[-3:] == ["D", "D", "C"]:
+            # Sequence complete, now revert to tit-for-tat
+            if opponent_history[-1] == "D":
+                return "D"
+            else:
+                return "C"
+        elif my_history[-2:] == ["D", "D"]:
+            return "C"
+        elif my_history[-1] == "D":
+            return "D"
+
+    # If the opponent defected in the last round, start the sequence
+    if opponent_history[-1] == "D":
+        return "D"
+    else:
+        return "C"
+
 
 strategies = [
     always_cooperate,
@@ -170,4 +197,5 @@ strategies = [
     adaptive_randomization,
     wrath,
     james_strat,
+    salty_tit_for_tat,
 ]

@@ -113,10 +113,12 @@ def run_tournament(strategies):
         for j, strategy2 in enumerate(strategies):
             if i < j:  # Ensure each strategy pair is only matched once
                 print(f"\nNext Match: {strategy1.__name__} vs {strategy2.__name__}")
+                """
                 response = input("Play match? (y/n): ").strip().lower()
                 if response == 'n':
                     print("Tournament terminated by user.")
                     return results  # Exit the function and terminate the tournament
+                """
                 rounds = random.randint(195, 205)
                 reputation1 = results[strategy1.__name__]["reputation"]
                 reputation2 = results[strategy2.__name__]["reputation"]
