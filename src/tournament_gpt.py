@@ -41,7 +41,7 @@ def update_reputation(reputation, my_move, opponent_move, expected_move):
         reputation += 1
     return reputation
 
-def get_gpt_commentary(prompt, max_tokens=250):
+def get_gpt_commentary(prompt, max_tokens=300):
     response = openai.ChatCompletion.create(
         model="gpt-4o",
         messages=[
@@ -171,7 +171,7 @@ final_prompt = (
     f"Final tournament analysis:\n"
     f"Results:\n"
     f"{results}\n"
-    f"Provide a humorous and in-depth analysis of the tournament, personify the strategies, and give an assessment of their performances. Keep the response concise and within the token limit."
+    f"Provide a humorous and in-depth analysis of the tournament, personify the strategies, and give an assessment of their performances. Keep the response concise and within 250 tokens."
 )
 final_commentary = get_gpt_commentary(final_prompt, max_tokens=500)
 print(f"\nGPT Final Tournament Commentary:\n{final_commentary}\n")

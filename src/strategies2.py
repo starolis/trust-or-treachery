@@ -430,9 +430,36 @@ def james_strat(
     else:
         return "C" if opponent_history[-1] == "C" else "D"
 
+def salty_tit_for_tat(
+    my_history, opponent_history, round_number, relative_score, opponent_reputation
+):
+    # First move is cooperate
+    if round_number == 1:
+        return "C"
+
+    # Handle the three-move sequence
+    if len(my_history) >= 3:
+        if my_history[-3:] == ["D", "D", "C"]:
+            # Sequence complete, now revert to tit-for-tat
+            if opponent_history[-1] == "D":
+                return "D"
+            else:
+                return "C"
+        elif my_history[-2:] == ["D", "D"]:
+            return "C"
+        elif my_history[-1] == "D":
+            return "D"
+
+    # If the opponent defected in the last round, start the sequence
+    if opponent_history[-1] == "D":
+        return "D"
+    else:
+        return "C"
+
+
 # List of strategies
 strategies = [
-    sliding_sixteen,
+    sliding_eight,
     james_strat,
     unconditional_cooperator,
     unconditional_defector,
@@ -453,20 +480,11 @@ strategies = [
     adaptive_pavlov,
     reactive_50_50_50,
     memory_one_50_50_50_50,
-    zero_determinant,
-    equalizer_2,
     extortionary_2,
     generous_2,
     good_strategy,
     sliding_three,
-    sliding_eight,
-    sliding_nine,
-    sliding_fifteen,
- 
     sliding_thirty_two,
     exploiter_of_magic,
     selective_memory,
-    double_whammy,
-    exotic_potato,
-    tombuck_tim,
 ]
