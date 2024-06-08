@@ -5,7 +5,7 @@ import os
 from statistics import mean
 import numpy as np
 from colorama import init, Fore, Style
-from strategies2 import strategies
+from entrants import strategies
 from dotenv import load_dotenv
 import textwrap
 
@@ -58,7 +58,7 @@ def play_match(
     score1, score2 = 0, 0
     reputation1, reputation2 = initial_reputation1, initial_reputation2
     mutual_cooperations = 0
-    noise_level = 0.02
+    noise_level = 0.05
     round_history = []
     noise_flags = []
 
