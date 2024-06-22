@@ -1,6 +1,6 @@
 import random
 import time
-import openai
+from openai import OpenAI
 import os
 from statistics import mean
 import numpy as np
@@ -9,9 +9,10 @@ from entrants import strategies
 from dotenv import load_dotenv
 import textwrap
 
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 # Load API key from .env file
 load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
+
 
 # Initialize colorama
 init(autoreset=True)
@@ -144,18 +145,16 @@ def generate_commentary(strategy1_name, strategy2_name, score1, score2, round_hi
         f"Commentary:"
     )
 
-    response = openai.ChatCompletion.create(
-        model="gpt-4o",
-        messages=[
-            {
-                "role": "system",
-                "content": "You are a witty and humorous commentator providing in-depth analysis of a tournament.",
-            },
-            {"role": "user", "content": prompt},
-        ],
-        max_tokens=200,  # Slightly reduced max tokens to leave some buffer
-        temperature=0.7,
-    )
+    response = client.chat.completions.create(model="gpt-4o",
+    messages=[
+        {
+            "role": "system",
+            "content": "You are a witty and humorous commentator providing in-depth analysis of a tournament.",
+        },
+        {"role": "user", "content": prompt},
+    ],
+    max_tokens=200,  # Slightly reduced max tokens to leave some buffer
+    temperature=0.7)
 
     return wrap_text(response.choices[0].message.content.strip())
 
@@ -173,18 +172,16 @@ def generate_final_commentary(sorted_results):
         )
     prompt += "\nFinal Commentary:"
 
-    response = openai.ChatCompletion.create(
-        model="gpt-4o",
-        messages=[
-            {
-                "role": "system",
-                "content": "You are a witty and humorous commentator providing in-depth analysis of a tournament.",
-            },
-            {"role": "user", "content": prompt},
-        ],
-        max_tokens=500,
-        temperature=0.7,
-    )
+    response = client.chat.completions.create(model="gpt-4o",
+    messages=[
+        {
+            "role": "system",
+            "content": "You are a witty and humorous commentator providing in-depth analysis of a tournament.",
+        },
+        {"role": "user", "content": prompt},
+    ],
+    max_tokens=500,
+    temperature=0.7)
 
     return wrap_text(response.choices[0].message.content.strip())
 
