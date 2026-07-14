@@ -8,7 +8,6 @@ This project is an end-of-year project for implementing strategies in a variant 
   - `tournament.py`: Core tournament logic.
   - `strategies.py`: Example strategies.
 - `docs/`: Contains the LaTeX documentation for the project.
-- `tests/`: Contains test scripts to ensure the code works as expected.
 
 ## How to Run
 
@@ -18,7 +17,7 @@ This project is an end-of-year project for implementing strategies in a variant 
 
 2. Navigate to the src directory and run the tournament:
 
-   cd trust-or-treachery-tournament/src
+   cd trust-or-treachery/src
    python tournament.py
 
 ## Example Strategies
